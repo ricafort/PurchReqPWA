@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://www.w3.org/2005/10/profile">
+
+    <link rel='manifest' href='./manifest.json'>
+
+    <link rel="icon"
+          type="image/png"
+          href="images/transdev-logo-tag.png">
+
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">    
+    <meta name="theme-color" content="#317EFB"/>
+
+    <link href="css/bootstrap.local.min.css" rel="stylesheet" />
+    <link href="css/dialog.css" rel="stylesheet" />
+    <!--<link href="assets/css/font-awesome.min.css" rel="stylesheet" />-->
+    <!--<link href="css/font-awesome.min.css" rel="stylesheet" />-->
+
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/w3.css" rel="stylesheet" />
+
+    
+    <!--<script src="assets/scripts/bootstrap.local.min.js"></script>-->
+    <!--<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-auth.js"></script>-->
+    <!--<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase-messaging.js"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.0.3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.0/jquery-confirm.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--<script src="assets/scripts/jquery-2.0.3.min.js"></script>-->
+    <!--<script src="assets/scripts/jquery-confirm.min.js"></script>-->
+    <!--<script src="assets/scripts/jquery-3.2.0.min.js"></script>-->
+
+
+    <title>Purchase Requisition Approval</title>
+</head>
+<body>
+
+    <!-- custom dialog -->
+    <div id="dialog-overlay"></div>
+    <div id="dialog-box">
+        <div>
+            <div id="dialog-box-head"></div>
+            <div id="dialog-box-body"></div>
+            <div id="dialog-box-foot"></div>
+        </div>
+    </div>
+
+
+    <!-- Image and text -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="logo pull-left" href="#">
+                    <span><img class="img-responsive" src="images/transdev-logo-tag.png" max-width:100% height:auto; display:block;></span>
+                </a>
+                <h4>Purchase Requisition Approval App</h4>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="https://www.transdev.com.au/">About</a></li>
+                    <li><a href="https://www.transdev.com.au/contact/contact-details/">Contact</a></li>
+                    <li>
+
+                        <form class="navbar-form navbar-right" id="frmLogin" role="form">
+                            <div id="twoFactor">
+                                <div id="results">This implements 2 Factor Security. Please send your mobile number, then tick captcha to receive verification code, verify using the code and then sign in</div>
+                                <div class="form-group" id="mobilediv">
+                                    <input type="text" id="mobileNumber" name="mobileNumber" placeholder="mobileNumber" class="form-control">
+                                    <input type="button" value="Send" onclick="getPhoneNumberFromUserInput()" class="btn btn-success">
+                                </div>
+                                <div class="form-group" id="verifydiv">
+                                    <input type="text" id="verificationCode" name="verificationCode" placeholder="verificationCode" class="form-control">
+                                    <input type="button" value="verify" onclick="twoFactor()" class="btn btn-success">
+                                </div>
+                                <div id="recaptcha-container"></div>
+                            </div>
+                            <div id="divLogin">
+                                <div class="form-group" id="usernamediv">
+                                    <label class="sr-only" for="username">Username: </label>
+                                    <input type="text" id="username" name="userName" placeholder="Username" class="form-control">
+                                </div>
+                                <div class="form-group" id="passworddiv">
+                                    <label class="sr-only" for="password">Password: </label>
+                                    <input type="password" id="password" name="password" placeholder="Password" class="form-control">
+                                </div>
+                            </div>
+                            <div id="user"></div>
+                            <button type="button" class="btn btn-success" id="btnLogin" value="login">Sign in</button>
+                            <button type="button" class="btn btn-success" id="btnLogout" value="logout">Sign out</button>
+                        </form>
+                        <div id="preOutput"></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Nav tabs -->
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="active" data-toggle="pill" href="#panel1" role="tab" onclick="findbyProjManager()">Pending Approvals</a>
+            </li>
+            <li class="nav-item">
+                <a data-toggle="pill" href="#panel2" role="tab" onclick="findbyProjManagerCompleted()">Completed</a>
+            </li>
+        </ul>
+
+        <!-- Tab panels -->
+        <div class="tab-content">
+            <!--Panel 1-->
+            <div class="tab-pane fade in active" id="panel1" role="tabpanel">
+                <div class="jumbotron">
+                    <h5>Search by Company and Project Manager</h5>
+                    <label for="_company">Company:</label>
+                    <div class="box">
+                        <div class="example">
+                            <input type="text" id="_company" />
+                        </div>
+                    </div>
+                    <label for="_projManager">Project manager:</label>
+                    <div class="box">
+                        <div class="example">
+                            <input type="text" id="_projManager" />
+                            <button onclick="findbyProjManager()">
+                                <span class="icon"><i class="fa fa-search"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                    <h5>Search by Purchase Requisition ID</h5>
+                    <label for="prId">Purchase requisition number:</label>
+                    <div class="box">
+                        <div class="example">
+                            <input type="text" id="prId" />
+                            <button onclick="findH()">
+                                <span class="icon"><i class="fa fa-search"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" id="prHeader">
+                    <ul id="purchReqHeadersProjManager" />
+                    <!--<div id="container123">
+                    </div>-->
+                </div>
+            </div>
+            <!--/.Panel 1-->
+            <!--Panel 2-->
+            <div class="tab-pane fade" id="panel2" role="tabpanel">
+                <div class="jumbotron">
+                    <div class="card" id="prHeaderCompleted">
+                        <ul id="purchReqHeadersProjManagerCompleted" />
+                    </div>
+                </div>
+            </div>
+            <!--/.Panel 2-->
+            <!--</div>-->
+        </div>
+        <!-- /Tab panels -->
+
+        <div class="fab fab__push">
+            <div class="fab__ripple"></div>
+            <img class="fab__image" src="./images/push-off.png" alt="Push Notification" />
+          </div>
+  
+          <!-- Toast msg's  -->
+          <div class="toast__container"></div>
+
+    </div>
+    <!--/Container-->
+
+    <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyCyuWWcuRQ8lKBvGW75dr1A5fb3gBh4n4I",
+            authDomain: "testweb-1da8b.firebaseapp.com",
+            databaseURL: "https://testweb-1da8b.firebaseio.com",
+            projectId: "testweb-1da8b",
+            storageBucket: "testweb-1da8b.appspot.com",
+            messagingSenderId: "959937145635"
+        };
+        firebase.initializeApp(config);
+    </script>
+
+
+    <script src="./js/app.js"></script>
+    <script src="./js/dialog.js"></script>
+    <script src="./js/notification.js"></script>
+    <script src="./js/menu.js"></script>
+</body>
+</html>

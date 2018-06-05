@@ -1,0 +1,22 @@
+﻿{ 
+ 	"manifest_version": 1,
+    "name": "Purchase Requisition Approval App",
+	"short_name": "PurchReqPWA",
+	"icons": [
+		{
+		    "src": "/images/transdev-logo-tag.png",
+            "type": "image/png",
+            "sizes": "192x192"
+		},
+		{
+		"src": "./images/transdev-logo-tag.png",
+		"type": "image/png",
+		"sizes": "512x512"
+		}
+	],
+	"start_url": "./index.html?utm=homescreen",
+	"display": "standalone",
+	"background_color": "transparent",
+	"theme_color": "#317EFB",
+	"gcm_sender_id": "959937145635"
+}
